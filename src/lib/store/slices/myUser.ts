@@ -2,6 +2,7 @@
 // 'use client'; // Не требуется, если slice не содержит клиентских хуков
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import cookie from '@/lib/cookie'
 
 // ---- Типы ----
 export interface MyUserState {
@@ -33,9 +34,14 @@ const myUserSlice = createSlice({
     initialState,
     reducers: {
         AuthSet(state, action: PayloadAction<AuthPayload>) {
+            cookie.set('tid=' + action.payload.tokenId, !action.payload.remember)
+            cookie.set('tkey=' + action.payload.tokenKey, !action.payload.remember)
+
             state.auth = true; // Явно устанавливаем auth в true при успешной аутентификации
             state._id = action.payload._id;
             state.login = action.payload.login;
+
+
         },
         AuthDel(state) {
             // Явно сбрасываем все поля в начальное состояние

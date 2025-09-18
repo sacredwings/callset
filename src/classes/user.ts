@@ -50,13 +50,6 @@ export class CUser {
             //ссылки
             id = new DB().ObjectID(id)
 
-            if (fields.photo_id)
-                fields.photo_id = new DB().ObjectID(fields.photo_id)
-            if (fields.cover_id)
-                fields.cover_id = new DB().ObjectID(fields.cover_id)
-            if (fields.cover_video_id)
-                fields.cover_video_id = new DB().ObjectID(fields.cover_video_id)
-
             //обязательно нижний регистр
             if (fields.login)
                 fields.login = fields.login.toLowerCase()
@@ -69,11 +62,13 @@ export class CUser {
                 fields.password = await bcrypt.hash(fields.password, passwordSalt)
             }
 
+            /*
             //ПРОВЕРКА
             if (fields.login)
                 arSearchUser = await this.GetByField({login: fields.login, _id: { $ne: id }})
             if (arSearchUser)
                 throw ({code: 30020001, msg: 'Такой login уже зарегистрирован'})
+*/
 
             const mongoClient = Store.GetMongoClient()
             let collection = mongoClient.collection('user');

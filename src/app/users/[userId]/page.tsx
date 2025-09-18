@@ -10,8 +10,7 @@ export default async function Page ({
 
     return (
         <div>
-            <MessagesMenu userId={userIdParam}/>
-            <MessagesList userId={userIdParam}/>
+            Пользователь {userIdParam}
         </div>
     );
 }

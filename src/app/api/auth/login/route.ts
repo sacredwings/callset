@@ -4,7 +4,6 @@ import { mongo, minio } from "@/lib/connect"
 import Joi from "joi"
 import { CAuth }  from "@/classes/auth"
 import {headers} from "next/headers";
-import config from "../../../../../config.json";
 import {serverCheckResult} from "recaptcha-v3-react-function-async";
 
 export async function POST (request: Request) {

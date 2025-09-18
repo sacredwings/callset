@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { mongo, minio } from "@/lib/connect"
 import { DB } from "@/classes/db"
 import { Authentication } from "@/app/api/function"
+import { CUser } from "@/classes/user"
 import Config from "../../../../../config.json";
 
 export async function GET (request: Request) {
@@ -19,6 +20,9 @@ export async function GET (request: Request) {
                 err: 0,
                 response: false
             })
+
+            let result = await CUser.GetById ( [userId] )
+            result = result[0]
 
             return NextResponse.json({
                 err: 0,

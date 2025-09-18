@@ -1,10 +1,10 @@
-import NavbarChats from "@/components/navbar/chats"
+import ChatsMenu from "@/components/chats/menu"
 import ChatsList from "@/components/chats/list"
 
 export default function Page() {
     return (
         <div>
-            <NavbarChats />
+            <ChatsMenu />
             <ChatsList />
         </div>
     );

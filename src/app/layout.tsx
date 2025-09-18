@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.sass";
 import StoreProvider from '../lib/store/StoreProvider';
 import AppInit from "@/components/app/init";
+import Menu from "@/components/menu/server";
+import Style from "@/app/style.module.sass";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -20,8 +22,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+    children,
+}: {
     children: React.ReactNode;
 }) {
     return (
@@ -29,7 +31,16 @@ export default function RootLayout({
         <body>
         <StoreProvider>
             <AppInit />
-            {children}
+            <div className={Style.template}>
+                <div className={Style.center}>
+                    <div className={Style.content}>
+                        {children}
+                    </div>
+                    <div className={Style.footer}>
+                        <Menu />
+                    </div>
+                </div>
+            </div>
         </StoreProvider>
         </body>
         </html>

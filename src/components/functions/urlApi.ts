@@ -6,7 +6,7 @@ import config from "../../../config.json";
 import axios, {AxiosRequestConfig} from "axios"
 
 export async function ServerAccountGet ({cookies=null}) {
-    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3030`
+    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3000`
 
     let arFields = {
         headers: {
@@ -26,7 +26,7 @@ export async function ServerAuthLogin ({
     login,
     password,
 }: interfaceAuthLogin){
-    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3030`
+    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3000`
     let gtoken = await reCaptchaExecute(config.google.reCaptcha.public, `auth_login`)
 
     let arFields = {
@@ -47,7 +47,7 @@ export async function ServerAuthReg ({
     login,
     password,
 }: interfaceAuthReg){
-    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3030`
+    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3000`
     let gtoken = await reCaptchaExecute(config.google.reCaptcha.public, `auth_reg`)
 
     let arFields = {

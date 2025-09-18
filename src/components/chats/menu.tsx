@@ -15,6 +15,7 @@ export default function MenuList ({}) {
             const resAccount = await ServerAccountGet({})
 
             console.log(resAccount)
+            //LogIn(resAccount)
         })()
     }, [myUser])
     //

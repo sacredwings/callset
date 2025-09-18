@@ -2,18 +2,13 @@
 'use client'
 
 import Link from "next/link"
+import {useRouter} from "next/navigation";
 import {useState} from 'react'
-//import {reCaptchaExecute} from 'recaptcha-v3-react-function-async'
-
-//store
 import { useAppSelector, useAppDispatch } from '@/lib/store/hooks'
 import { AuthSet } from '@/lib/store/slices/myUser'
-import config from '../../../config.json'
-import {useRouter} from "next/navigation";
 import {ServerAuthLogin} from "@/components/functions/urlApi";
 
-
-export default function AuthLogin (props) {
+export default function AuthLogin () {
     let [form, setForm] = useState({
         login: '',
         password: '',

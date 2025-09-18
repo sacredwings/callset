@@ -1,28 +1,20 @@
 // @ts-nocheck
 'use client'
 
+import Link from "next/link"
 import {useRouter} from "next/navigation";
 import {useState} from 'react'
-import axios from 'axios'
-import {reCaptchaExecute} from "recaptcha-v3-react-function-async"
+import {useAppSelector, useAppDispatch} from "@/lib/store/hooks"
+import {AuthSet} from "@/lib/store/slices/myUser"
+import {ServerAuthReg} from "@/components/functions/urlApi"
 
-//store
-import {useAppSelector, useAppDispatch} from "@/store/hooks"
-import {AuthSet} from "@/store/reducer/myUser"
+export default function AuthReg () {
 
-import config from '../../../config.json'
-import {ServerAuthReg} from "@/component/function/url_api";
-
-//https://oauth.vk.com/token?grant_type=password&client_id=2274003&client_secret=hHbZxrka2uZ6jB1inYsH&username=%D0%9B%D0%9E%D0%93%D0%98%D0%9D&password=%D0%9F%D0%90%D0%A0%D0%9E%D0%9B%D0%AC&captcha_key=q24yud&captcha_sid=656412648896
-
-export default function Reg () {
     let [form, setForm] = useState({
-        email: '',
         login: '',
         password: ''
     })
     let formErrDefault = {
-        email: false,
         login: false,
         password: false,
     }
@@ -34,20 +26,16 @@ export default function Reg () {
         event.preventDefault();
 
         //выходим ошибки формы
-        if (form.email.length < 5)
-            setFormErr(prevState => ({...prevState, email: true}))
         if (form.login.length < 5)
             setFormErr(prevState => ({...prevState, login: true}))
         if (form.password.length < 8)
             setFormErr(prevState => ({...prevState, password: true}))
 
         //системная ошибка
-        if ((form.email.length < 5) || (form.login.length < 5) || (form.password.length < 8)) return
+        if ((form.login.length < 5) || (form.password.length < 8)) return
 
-        let gtoken = await reCaptchaExecute(config.google.reCaptcha.public, 'reg')
 
         let response = await ServerAuthReg({
-            email: form.email,
             login: form.login,
             password: form.password,
         })
@@ -63,7 +51,8 @@ export default function Reg () {
             remember: true
         }))
 
-        await router.push(`/user/${response._id}`)
+        await router.push(`/users/`)
+        //await router.push(`/user/${response._id}`)
     }
 
     function onChange (event) {
@@ -71,7 +60,7 @@ export default function Reg () {
         let value = event.target.value
 
         //удаление пробелов
-        if ((name === 'email') || (name === 'login'))
+        if (name === 'login')
             value = value.replace(/\s/g, '');
 
         //выходим если длиньше 32
@@ -87,21 +76,10 @@ export default function Reg () {
         <div className="shadow p-3 mb-3 bg-white rounded">
             <h2 className="">Регистрация</h2>
 
-            {/*<video controls={true} preload="preload" style={{width: '100%'}}>
-                <source src="https://voenset.ru/files/f1/97/f197b1a41bd0b659d5db8f73c5badd64.mp4"
-                        type="video/mp4"/>
-            </video>*/}
         </div>
 
         <div className="shadow p-3 mb-3 bg-white rounded">
             <form onSubmit={onClickReg}>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input type="email" className={`form-control ${formErr.email ? `is-invalid`:null}`} id="email" name="email" minLength={5} maxLength={32} value={form.email} onChange={onChange} autoComplete=""/>
-                    <div id="validationServer03Feedback" style={formErr.email ? {display: 'block'} : null} className={`invalid-feedback`}>
-                        Введите более 5 символов
-                    </div>
-                </div>
                 <div className="mb-3">
                     <label htmlFor="login" className="form-label">Логин</label>
                     <input type="text" className={`form-control ${formErr.login ? `is-invalid`:null}`} id="login" name="login" minLength={5} maxLength={32} value={form.login} onChange={onChange} autoComplete=""/>

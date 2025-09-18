@@ -3,7 +3,7 @@ import Style from "./style.module.sass";
 
 export default function Home() {
     return (
-        <div className={Style.template}>
+        <div>
             Мессенджер
             <br/>
             <Link href={'/users'}>Пользователи</Link>

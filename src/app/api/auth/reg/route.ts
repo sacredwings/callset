@@ -1,12 +1,11 @@
 // @ts-nocheck
 import { NextResponse } from 'next/server'
-import { mongo, minio } from "@/utility/connect"
+import { mongo, minio } from "@/lib/connect"
 import Joi from "joi"
-import { CAuth, CUser, Store }  from "@/social-framework"
+import { CAuth }  from "@/classes/auth"
+import { CUser }  from "@/classes/user"
 import {headers} from "next/headers";
-import config from "../../../../../config.json";
 import {serverCheckResult} from "recaptcha-v3-react-function-async";
-import { createTransport } from 'nodemailer'
 
 export async function POST (request: Request) {
     try {
