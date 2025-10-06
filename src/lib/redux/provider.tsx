@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from './index'; // Импортируем настроенный store
+import { store } from './store'; // Импортируем настроенный store
 
 interface StoreProviderProps {
     children: React.ReactNode;

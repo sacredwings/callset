@@ -33,7 +33,7 @@ const myUserSlice = createSlice({
     name: 'myUser',
     initialState,
     reducers: {
-        AuthSet(state, action: PayloadAction<AuthPayload>) {
+        AuthSet(state, action: PayloadAction<MyUserState>) {
             cookie.set('tid=' + action.payload.tokenId, !action.payload.remember)
             cookie.set('tkey=' + action.payload.tokenKey, !action.payload.remember)
 
@@ -51,8 +51,16 @@ const myUserSlice = createSlice({
             // Или, если вы уверены, что всегда хотите сбросить к полному initialState:
             // Object.assign(state, initialState);
         },
+        AuthUpdate(state, action: PayloadAction<MyUserState>) {
+            return {
+                ...state,
+                auth: true,
+                _id: action.payload._id,
+                login: action.payload.login,
+            }
+        },
     },
 });
 
-export const { AuthSet, AuthDel } = myUserSlice.actions;
+export const { AuthSet, AuthDel, AuthUpdate } = myUserSlice.actions;
 export default myUserSlice.reducer; // Экспортируем функцию-редьюсер

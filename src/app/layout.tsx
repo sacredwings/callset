@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.sass";
-import StoreProvider from '../lib/store/StoreProvider';
+import StoreProvider from '@/lib/redux/provider';
 import AppInit from "@/components/app/init";
 import Menu from "@/components/menu/server";
 import Style from "@/app/style.module.sass";
+import CallModal from "@/components/call/modal";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -30,7 +31,7 @@ export default function RootLayout({
         <html lang="en">
         <body>
         <StoreProvider>
-            <AppInit />
+            <CallModal />
             <div className={Style.template}>
                 <div className={Style.center}>
                     <div className={Style.content}>

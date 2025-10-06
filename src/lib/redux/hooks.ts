@@ -3,7 +3,7 @@
 'use client'; // <-- НУЖНО ЗДЕСЬ
 
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from './index'; // Импортируем AppDispatch и RootState
+import type { AppDispatch, RootState } from './store'; // Импортируем AppDispatch и RootState
 
 // Типизированные хуки для Redux
 

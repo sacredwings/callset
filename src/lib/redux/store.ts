@@ -1,8 +1,10 @@
 // app/store.ts
 // 'use client'; // Не требуется, если store не содержит клиентских хуков
 
-import { configureStore } from '@reduxjs/toolkit';
-import myUserReducer from './slices/myUser'; // Импортируем наш единственный редьюсер
+import { configureStore } from '@reduxjs/toolkit'
+import myUserReducer from '@/lib/redux/slices/myUser' // Импортируем наш единственный редьюсер
+import socketReducer from '@/lib/redux/slices/socket'
+import peerReducer from '@/lib/redux/slices/peer'
 
 // ---- configureStore ----
 export const store = configureStore({
@@ -10,14 +12,16 @@ export const store = configureStore({
     // или как объект, если планируете добавлять другие редьюсеры в будущем.
     reducer: {
         myUser: myUserReducer,
+        socket: socketReducer,
+        peer: peerReducer
     },
     // Middleware (например, thunk) добавляются configureStore по умолчанию.
     // devTools: process.env.NODE_ENV !== 'production', // Оставьте, если нужен DevTools
-});
+})
 
 // ---- Типы ----
 // Определяем тип всего состояния Redux.
 // ReturnType<typeof store.getState> является самым надежным способом получить тип всего состояния.
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>
 // Тип для dispatch, который позволяет выполнять асинхронные действия (thunks).
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch

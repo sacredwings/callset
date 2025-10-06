@@ -1,5 +1,6 @@
 import MessagesMenu from "@/components/messages/menu";
 import MessagesList from "@/components/messages/list";
+import UsersId from "@/components/users/id";
 
 export default async function Page ({
     params
@@ -10,7 +11,7 @@ export default async function Page ({
 
     return (
         <div>
-            Пользователь {userIdParam}
+            <UsersId id={userIdParam}/>
         </div>
     );
 }

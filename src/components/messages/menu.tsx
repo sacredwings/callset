@@ -1,6 +1,6 @@
 // @ts-nocheck
 'use client'
-import {useAppSelector} from "@/lib/store/hooks";
+import {useAppSelector} from "@/lib/redux/hooks";
 import Style from "./messages.module.sass";
 
 export default function MenuChat ({userId}) {

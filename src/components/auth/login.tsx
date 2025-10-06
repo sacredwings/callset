@@ -4,8 +4,8 @@
 import Link from "next/link"
 import {useRouter} from "next/navigation";
 import {useState} from 'react'
-import { useAppSelector, useAppDispatch } from '@/lib/store/hooks'
-import { AuthSet } from '@/lib/store/slices/myUser'
+import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks'
+import { AuthSet } from '@/lib/redux/slices/myUser'
 import {ServerAuthLogin} from "@/components/functions/urlApi";
 
 export default function AuthLogin () {
