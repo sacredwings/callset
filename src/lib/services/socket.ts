@@ -4,7 +4,7 @@ import {
     socketConnect,
     socketDisconnect,
 } from '@/lib/redux/slices/socket'
-import {GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
+import {CallStart, GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
 import {openModal} from "@/lib/redux/slices/peer";
 
 // --- Конфигурация ---
@@ -40,15 +40,22 @@ const setupSocketEvents = () => {
     // --- WebRTC Signaling Handlers ---
     socketInstance.on('offer', (offer, userSenderId, sucketSenderId) => {
         console.log(`Получаю offer от: ${userSenderId}, ${sucketSenderId} - Входящий звонок`);
-        //setPeerStatus(`Получаю offer от: ${senderId} - Входящий звонок`);
-        //createPeerConnection(socket, offer, senderId, false); // Не инициатор
 
+
+        CallStart ({
+            receiverId: userSenderId,
+            isInitiator: false,
+            video: true,
+            audio: true
+        })
+
+        /*
         store.dispatch(openModal({
             receiverId: userSenderId,
             isInitiator: false
-        }))
+        }))*/
 
-        //console.log(peer)
+
         SetOffer(offer)
     });
 

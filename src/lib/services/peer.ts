@@ -1,6 +1,9 @@
 import Peer from 'simple-peer'
 import { store } from '@/lib/redux/store' // <--- !!! ИМПОРТИРУЕМ ГЛОБАЛЬНЫЙ STORE !!!
 import {
+    openModal,
+    closeModal,
+    setLocalStream,
     setRemoteStream
 } from '@/lib/redux/slices/peer'
 import { getSocket } from '@/lib/services/socket'
@@ -8,14 +11,28 @@ import { getSocket } from '@/lib/services/socket'
 // --- Конфигурация ---
 
 // --- Глобальная переменная для сокет-соединения ---
-let peerInstance: typeof Peer | null = null; // <-- Глобальная переменная для самого экземпляра!
-let isInitiator: boolean | null = null
-let receiverId: string | null = null
+interface interfaceState {
+    peer: typeof Peer | null //
+    isConnect: boolean
+    isInitiator: boolean | null //
+    receiverId: string | null //
+    localStream: MediaStream | null //
+    remoteStream: MediaStream | null //
+    offer: null
+}
 
-let localStream: null = null
-let remoteStream: null = null
+// Начальное состояние
+export const state: interfaceState = {
+    peer: null,
+    isConnect: false,
+    isInitiator: null,
+    receiverId: null,
+    localStream: null,
+    remoteStream: null,
+    offer: null,
 
-let offer = null
+};
+
 // --- Функции для управления сокетом ---
 
 /**
@@ -26,146 +43,161 @@ const setupPeerEvents = () => {
     const peertState = store.getState().peer
     const socket = getSocket()
 
-    if (!peerInstance) return // Если экземпляра нет, ничего не делаем
+    if (!state.peer) return // Если экземпляра нет, ничего не делаем
 
-    peerInstance.on('signal', (data) => {
-        console.log('отправляю signal')
-        console.log('Sending signal:', data.type)
-        if (peertState.isInitiator) {
+    state.peer.on('connect', () => {
+        console.log('Peer connection')
+
+        state.isConnect = true //пир подключен
+    });
+
+    state.peer.on('error', (err) => {
+        console.error('Peer connection error:', err)
+    });
+
+    state.peer.on('close', () => {
+        console.log('Peer closed')
+
+        CallEnd() //обнуляем все
+    });
+
+    state.peer.on('signal', (data) => {
+        console.log('Получен signal:', data.type)
+
+        if (state.isInitiator) {
             // Если мы инициатор, отправляем offer
-            // Для простоты, мы не знаем ID другого пользователя, поэтому просто отправляем offer
-            // Сервер сигнализации должен будет перенаправить его.
-            console.log(`отправляю offer - ${receiverId}`)
-            socket.emit('offer', data, receiverId);
+            console.log(`отправляю offer - ${state.receiverId}`)
+            socket.emit('offer', data, state.receiverId);
         } else {
             // Если мы не инициатор, отправляем answer
-            // targetId - это ID инициатора
-            console.log(`отправляю answer - ${receiverId}`)
-            socket.emit('answer', data, receiverId);
+            console.log(`отправляю answer - ${state.receiverId}`)
+            socket.emit('answer', data, state.receiverId);
         }
     });
-    peerInstance.on('stream', (remoteStream1) => {
+    state.peer.on('stream', (remoteStream) => {
+        console.log('Получен удаленный stream')
 
-        console.log('Получен удаленный stream');
-
-        //console.log(remoteStream)
-        remoteStream = remoteStream1
-        store.dispatch(setRemoteStream())
-
-        /*
-        if (remoteVideoRef) {
-            remoteVideoRef.srcObject = remoteStream;
-        }
-*/
-        //setIsConnectedToPeer(true);
-        //setPeerStatus(isInitiator ? 'Connected!' : `Connected to ${toId}`);
+        state.remoteStream = remoteStream //сохраняем удаленный stream
+        store.dispatch(setRemoteStream()) //уведомление, что stream подключен
     });
 };
 
 /**
- * Инициализирует WebSocket соединение.
+ * Инициализирует Peer соединение.
  */
 export const initializePeer  = ({
     isInitiator,
-    //localStream,
-    receiverId: localReceiverId
+    receiverId
 }:{
     isInitiator: boolean
     //localStream: MediaStream
     receiverId: string
 }) => {
     console.log('initializePeer')
-    if (peerInstance) {
+    if (state.peer) {
         console.log('Peer уже создан')
         return
     }
 
     const options = {
         initiator: isInitiator,
-        stream: localStream,
+        stream: state.localStream,
         trickle: false, // Сбор всех ICE кандидатов одновременно
     }
     console.log(options)
-    peerInstance = new Peer(options);
-    receiverId = localReceiverId
+    state.peer = new Peer(options);
+    state.receiverId = receiverId
+    state.isInitiator = isInitiator
     setupPeerEvents()
 }
 
-// --- Функция получения локального медиапотока ---
-export const setLocalStream = async (videoRef) => {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localStream = stream
-        videoRef.srcObject = stream
-        return stream;
-    } catch (err) {
-        console.error('Error accessing media devices:', err);
-        //setCallStatus('Error: Could not access camera/microphone.');
-        return null;
-    }
-}; // useCallback, чтобы функция не пересоздавалась без необходимости
+/**
+ * Создание медиа потока
+ */
+export const setStream = async ({video = true, audio = true}) => {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
+    state.localStream = stream
+    store.dispatch(setLocalStream())
+}
 
+/**
+ * Получает локальный медиа поток
+ */
+export const getLocalStream = async (videoRef) => {
+    return state.localStream
+}
 
-// --- Функция установки для передачи удаленного медиапотока ---
+/**
+ * Получает удаленный медиа поток
+ */
 export const getRemoteStream = async () => {
-    return remoteStream
+    return state.remoteStream
+}
 
-}; // useCallback, чтобы функция не пересоздавалась без необходимости
-
+/**
+ * Получает peer
+ */
 export const getPeer = () => {
-    return peerInstance
+    return state.peer
 }
 
 export const Signal = (data) => {
-    if (!peerInstance) {
+    if (!state.peer) {
         console.log('Нет peer чтобы отправить signal')
         return
     }
     console.log('Отправляю signal')
-    peerInstance.signal(data)
-
+    state.peer.signal(data)
 }
 
-export const SetOffer = (offer1) => {
-    offer = offer1
+/**
+ * Устанавливает offer
+ */
+export const SetOffer = (offer) => {
+    state.offer = offer
 }
 
+/**
+ * Получает offer
+ */
 export const GetOffer = () => {
-    return offer
+    return state.offer
 }
 
-/**
- * Проверяет, подключен ли сокет.
- * @returns {boolean} - True, если сокет подключен, иначе false.
- */
-/*
-export const isSocketConnected = () => {
-    return socket && socket.connected;
-};*/
+export const CallStart = async ({isInitiator, receiverId, video, audio}) => {
+    console.log('Открываю вызов')
 
-/**
- * Отправляет данные на WebSocket сервер.
- * @param {string} event - Название события.
- * @param {*} data - Данные для отправки.
- */
-/*
-export const emitSocketEvent = (event, data) => {
-    if (!isSocketConnected()) {
-        console.warn('Cannot emit event: WebSocket is not connected.');
-        // Опционально: можно попытаться переподключиться или продиспатчить ошибку
-        // connectSocket(); // Попытка переподключения
-        store.dispatch({ type: 'SOCKET_EMIT_ERROR', payload: 'WebSocket not connected' });
-        return;
-    }
-    socket.emit(event, data);
-    console.log(`Emitted event "${event}" with data:`, data);
-};*/
+    //открываем модальное окно
+    store.dispatch(openModal({
+        receiverId: receiverId, //кому звоним
+    }))
 
-/*
-// --- Экспорт функций ---
-export default {
-    connectSocket,
-    disconnectSocket,
-    //isSocketConnected,
-    //emitSocketEvent,
-};*/
+    //получение потока
+    await setStream({video, audio}) //настраиваем захват
+
+    //создание peer
+    initializePeer({
+        isInitiator: isInitiator,
+        receiverId: receiverId
+    })
+}
+
+export const CallEnd = () => {
+    console.log('Закрываю вызов')
+
+    //закрываем модальное окно
+    store.dispatch(closeModal())
+
+    //обрыв соединения
+    if (state.isConnect)
+        state.peer.destroy()
+
+    //обнуление
+    state.peer = null
+    state.isConnect = false
+    state.isInitiator = null
+    state.receiverId = null
+    state.localStream = null
+    state.remoteStream = null
+    state.offer = null
+}

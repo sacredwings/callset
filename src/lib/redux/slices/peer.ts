@@ -3,31 +3,31 @@ import Peer from 'simple-peer';
 
 interface SocketState {
     isModalOpen: boolean //
-    localStream: MediaStream | null //
-    remoteStream: MediaStream | null //
-    peerConnection: Peer | null //
-    callStatus: string //
-    offer: RTCSessionDescription | null
-    isInitiator: boolean
+    localStream: boolean //
+    remoteStream: boolean //
+    //peerConnection: Peer | null //
+    //callStatus: string //
+    //offer: RTCSessionDescription | null
+    //isInitiator: boolean
     receiverId: string | null
-    callerId: string | null
-    calleeId: string | null,
-    error: string,
+    //callerId: string | null
+    //calleeId: string | null,
+    //error: string,
 }
 
 // Начальное состояние
 const initialState: SocketState = {
     isModalOpen: false,
-    localStream: null,
-    remoteStream: null,
-    peerConnection: null,
-    callStatus: 'Disconnected',
-    offer: null,
-    isInitiator: false,
+    localStream: false,
+    remoteStream: false,
+    //peerConnection: null,
+    //callStatus: 'Disconnected',
+    //offer: null,
+    //isInitiator: false,
     receiverId: null,
-    callerId: null,
-    calleeId: null,
-    error: ''
+    //callerId: null,
+    //calleeId: null,
+    //error: ''
 };
 
 export const socketSlice = createSlice({
@@ -41,10 +41,10 @@ export const socketSlice = createSlice({
         //Назначение:
         // UI: Инициирует отображение модального окна на экране.
         // Логика: Сигнализирует о начале процесса звонка.
-        openModal(state, action: PayloadAction<{receiverId: string, isInitiator: boolean}>) {
+        openModal(state, action: PayloadAction<{receiverId: string}>) {
             state.isModalOpen = true
             state.receiverId = action.payload.receiverId
-            state.isInitiator = action.payload.isInitiator
+            //state.isInitiator = action.payload.isInitiator
         },
 
         //Описание: Эта функция сообщает Redux, что модальное окно звонка должно быть закрыто.
@@ -61,10 +61,8 @@ export const socketSlice = createSlice({
         // Состояние: Сбрасывает состояние звонка к начальному.
         closeModal(state) {
             state.isModalOpen = false
-            state.localStream = null
-            state.remoteStream = null
-            state.peerConnection = null
-            state.callStatus = 'ended' // или 'idle'
+            state.remoteStream = false
+            state.receiverId = null
         },
 
         //Описание: Эта функция сохраняет полученный локальный медиапоток (видео/аудио с вашей камеры) в состоянии Redux.
@@ -75,8 +73,8 @@ export const socketSlice = createSlice({
         //Назначение:
         // UI: Позволяет отобразить ваше видео в локальном окне модального окна.
         // P2P: Этот поток будет передан в simple-peer для отправки удаленной стороне.
-        setLocalStream(state, action: PayloadAction<{stream: MediaStream}>) {
-            state.localStream = action.payload.stream
+        setLocalStream(state) {
+            state.localStream = true
         },
 
         //Описание: Эта функция сохраняет полученный удаленный медиапоток (видео/аудио от собеседника) в состоянии Redux.
@@ -86,7 +84,7 @@ export const socketSlice = createSlice({
         // remoteStream: Устанавливает переданный stream объект.
         //Назначение:
         // UI: Позволяет отобразить видео вашего собеседника в соответствующем окне модального окна.
-        setRemoteStream(state, action: PayloadAction<{stream: MediaStream}>) {
+        setRemoteStream(state) {
             state.remoteStream = true
         },
 
@@ -97,9 +95,10 @@ export const socketSlice = createSlice({
         // peerConnection: Сохраняет переданный объект peer.
         //Назначение:
         // Доступ: Предоставляет удобный способ получить доступ к объекту P2P соединения из любого компонента, чтобы отправлять сигналы (peer.signal(...)), добавлять ICE кандидаты (peer.addIceCandidate(...)) или закрывать соединение (peer.destroy()).
+        /*
         setPeerConnection(state, action: PayloadAction<{peer: Peer}>) {
             state.peerConnection  = action.payload.peer
-        },
+        },*/
 
 
         //Описание: Это действие обрабатывает входящий звонок. Оно сохраняет данные о звонке и сигнализирует системе, что нужно открыть модальное окно для входящего звонка.
@@ -114,6 +113,7 @@ export const socketSlice = createSlice({
         //Назначение:
         // UI: Отображает модальное окно с информацией о том, кто звонит, и кнопками “Принять” / “Отклонить”.
         // Логика: Сохраняет необходимую информацию для последующего принятия звонка.
+        /*
         incomingCallOffer(state, action: PayloadAction<{
             offer: RTCSessionDescription,
             callerId: string
@@ -124,7 +124,7 @@ export const socketSlice = createSlice({
             state.callStatus = 'incoming'
             state.offer = action.payload.offer
             state.callerId = action.payload.callerId
-        },
+        },*/
 
         //Описание: Эта функция запускает процесс принятия входящего звонка.
         // Payload: Нет явного payload. Использует сохраненные offer и callerId из состояния Redux.
@@ -134,9 +134,10 @@ export const socketSlice = createSlice({
         // (Инициирует getUserMedia и создание peerConnection в компоненте, который обрабатывает это действие.)
         //Назначение:
         // Логика: Запускает асинхронный процесс получения локального потока, создания peerConnection (с initiator: false в случае ответа на offer), сигнализации (peer.signal(offer)) и отправки answer обратно.
+        /*
         acceptCall(state, action: PayloadAction<{callStatus : string}>) {
             state.callStatus  = action.payload.callStatus
-        },
+        },*/
 
         //Описание: Эта функция инициирует завершение текущего звонка.
         // Payload: Нет явного payload.
@@ -153,6 +154,7 @@ export const socketSlice = createSlice({
         // UI: Закрывает модальное окно.
         // Ресурсы: Триггерит очистку медиапотоков и закрытие P2P соединения (это обычно делается в компоненте, который слушает это действие, вызывая peerConnection.destroy() и останавливая треки).
         // Состояние: Полностью сбрасывает все параметры, связанные с текущим звонком.
+        /*
         endCall(state, action: PayloadAction<{peerStatus : string}>) {
             state.isModalOpen = false
             state.callStatus = 'ended' // или 'idle'
@@ -162,7 +164,7 @@ export const socketSlice = createSlice({
             state.offer = null
             state.callerId = null
             state.calleeId = null
-        },
+        },*/
 
         //Описание: Эта функция сообщает об ошибке, произошедшей во время звонка.
         // Payload (что приходит):
@@ -174,11 +176,12 @@ export const socketSlice = createSlice({
         //Назначение:
         // UI: Позволяет отобразить пользователю сообщение об ошибке.
         // Отладка: Помогает понять, что пошло не так.
+        /*
         callError(state, action: PayloadAction<{peerStatus : string}>) {
             state.callStatus = 'error'
             state.error = 'Failed to get user media'
         },
-
+*/
         /*
         setPeerStatus(state, action: PayloadAction<{peerStatus : string}>) {
             state.peerStatus  = action.payload.peerStatus
@@ -192,10 +195,10 @@ export const {
     closeModal,
     setLocalStream,
     setRemoteStream,
-    setPeerConnection,
-    incomingCallOffer,
-    acceptCall,
-    endCall,
-    callError
+    //setPeerConnection,
+    //incomingCallOffer,
+    //acceptCall,
+    //endCall,
+    //callError
 } = socketSlice.actions;
 export default socketSlice.reducer;
