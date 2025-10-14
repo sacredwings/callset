@@ -54,7 +54,7 @@ export default function MenuList ({}) {
                     ref={remoteVideoRef}
                     autoPlay
                     playsInline
-                    muted
+                    //muted
                     //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
                     className={Style.remoteVideo}
                 />
@@ -74,7 +74,7 @@ export default function MenuList ({}) {
                                     ref={localVideoRef}
                                     autoPlay
                                     playsInline
-                                    muted
+                                    //muted
                                     //className={Style.localVideo}
                                     //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
                                 />

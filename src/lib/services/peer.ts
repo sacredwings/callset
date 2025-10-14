@@ -115,7 +115,6 @@ export const initializePeer  = ({
  * Создание медиа потока
  */
 export const setStream = async ({video = true, audio = true}) => {
-    console.log(navigator)
     const stream = await navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
     state.localStream = stream
     store.dispatch(setLocalStream())
