@@ -8,7 +8,7 @@ interface SocketState {
     //peerConnection: Peer | null //
     //callStatus: string //
     //offer: RTCSessionDescription | null
-    //isInitiator: boolean
+    isInitiator: boolean | null
     receiverId: string | null
     //callerId: string | null
     //calleeId: string | null,
@@ -23,7 +23,7 @@ const initialState: SocketState = {
     //peerConnection: null,
     //callStatus: 'Disconnected',
     //offer: null,
-    //isInitiator: false,
+    isInitiator: null,
     receiverId: null,
     //callerId: null,
     //calleeId: null,
@@ -41,10 +41,10 @@ export const socketSlice = createSlice({
         //Назначение:
         // UI: Инициирует отображение модального окна на экране.
         // Логика: Сигнализирует о начале процесса звонка.
-        openModal(state, action: PayloadAction<{receiverId: string}>) {
+        openModal(state, action: PayloadAction<{receiverId: string, isInitiator: boolean}>) {
             state.isModalOpen = true
             state.receiverId = action.payload.receiverId
-            //state.isInitiator = action.payload.isInitiator
+            state.isInitiator = action.payload.isInitiator
         },
 
         //Описание: Эта функция сообщает Redux, что модальное окно звонка должно быть закрыто.

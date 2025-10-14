@@ -3,17 +3,16 @@
 import {useAppSelector, useAppDispatch} from "@/lib/redux/hooks"
 import {openModal} from "@/lib/redux/slices/peer";
 import {CallStart} from "@/lib/services/peer";
+import Style from "./id.module.sass";
 
-export default function UserId ({id}) {
+export default function UserId ({user}) {
     const myUser = useAppSelector((state) => state.myUser)
     const dispatch = useAppDispatch()
-
-    console.log()
 
     const OnClick = () => {
 
         CallStart ({
-            receiverId: id,
+            receiverId: user._id,
             isInitiator: true,
             video: true,
             audio: true
@@ -27,8 +26,9 @@ export default function UserId ({id}) {
     }
 
     return (
-        <div >
-            Пользователь {id}
+        <div className={Style.component}>
+            <h1>{user.login}</h1>
+            <br/>
             <button onClick={OnClick}>Позвонить</button>
         </div>
     )

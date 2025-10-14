@@ -115,6 +115,7 @@ export const initializePeer  = ({
  * Создание медиа потока
  */
 export const setStream = async ({video = true, audio = true}) => {
+    console.log(navigator)
     const stream = await navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
     state.localStream = stream
     store.dispatch(setLocalStream())
@@ -170,6 +171,7 @@ export const CallStart = async ({isInitiator, receiverId, video, audio}) => {
     //открываем модальное окно
     store.dispatch(openModal({
         receiverId: receiverId, //кому звоним
+        isInitiator: isInitiator
     }))
 
     //получение потока

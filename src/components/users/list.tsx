@@ -3,7 +3,7 @@
 import {useAppSelector} from "@/lib/redux/hooks"
 import Style from "./list.module.sass"
 
-export default function UsersList ({}) {
+export default function UsersList ({list}) {
     const myUser = useAppSelector((state) => state.myUser)
 
     return (

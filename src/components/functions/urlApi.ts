@@ -1,6 +1,11 @@
 // @ts-nocheck
 //АККАУНТ
-import {interfaceAuthLogin, interfaceAuthReg} from "@/components/functions/urlApiType";
+import {
+    interfaceAuthLogin,
+    interfaceAuthReg,
+    interfaceUserGet,
+    interfaceUserGetById
+} from "@/components/functions/urlApiType";
 import {reCaptchaExecute} from "recaptcha-v3-react-function-async"
 import config from "../../../config.json";
 import axios, {AxiosRequestConfig} from "axios"
@@ -63,6 +68,60 @@ export async function ServerAuthReg ({
     //await ToastSystemAdd(res.data)
     return res.data.response
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//ПОЛЬЗОВАТЕЛЬ
+export async function ServerUserGet ({
+    q=null,
+
+    offset=0,
+    count=20
+}: interfaceUserGet, {
+    cookies=null
+}) {
+    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3000`
+
+    let arFields = {
+        params: {
+            q,
+
+            offset,
+            count
+        } as interfaceUserGet,
+        headers: {
+            Cookie: cookies
+        }
+    } as AxiosRequestConfig
+
+    let url = `/api/user/get`
+    console.log(url)
+    let res = await axios.get(url, arFields);
+    return res.data.response
+}
+export async function ServerUserGetById ({
+    ids
+}: interfaceUserGetById, {
+    cookies=null
+}) {
+    if (is_server()) axios.defaults.baseURL = `http://127.0.0.1:3000`
+
+    let arFields = {
+        params: {
+            ids,
+        } as interfaceUserGetById,
+        headers: {
+            Cookie: cookies
+        }
+    } as AxiosRequestConfig
+
+    let url = `/api/user/getById`
+    console.log(url)
+    let res = await axios.get(url, arFields);
+    return res.data.response
+}
+
+
+
 
 //проверка где ввыполняется запрос
 function is_server () {

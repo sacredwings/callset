@@ -4,7 +4,6 @@
 import Link from 'next/link'
 import Style from "./style.module.sass"
 import {useEffect, useState} from "react"
-import config from "../../../config.json";
 import {loadReCaptcha} from "recaptcha-v3-react-function-async"
 import {AuthUpdate} from "@/lib/redux/slices/myUser";
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks'
@@ -13,6 +12,7 @@ import Socket from "@/lib/socket1";
 import cookie from "@/lib/cookie"; // Ваш сервис сокета
 import CallModal from '@/components/call/modal';
 import {initializeSocket, connectSocket} from "@/lib/services/socket";
+import config from "../../../config.json";
 
 export default function MenuClient ({account}) {
     const dispatch = useAppDispatch()
@@ -37,7 +37,7 @@ export default function MenuClient ({account}) {
             }))
 
             initializeSocket({
-                    url: 'http://localhost:3001',
+                    url: config.server.socket,
                     auth: {
                         tid: cookie.get('tid'),
                         tkey: cookie.get('tkey')

@@ -6,9 +6,10 @@ import {
 } from '@/lib/redux/slices/socket'
 import {CallStart, GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
 import {openModal} from "@/lib/redux/slices/peer";
+import config from "../../../config.json";
 
 // --- Конфигурация ---
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001'; // URL вашего WebSocket сервера
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || config.server; // URL вашего WebSocket сервера
 
 // --- Глобальная переменная для сокет-соединения ---
 let socketInstance: typeof Socket | null = null; // <-- Глобальная переменная для самого экземпляра!

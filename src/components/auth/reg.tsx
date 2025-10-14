@@ -51,8 +51,8 @@ export default function AuthReg () {
             remember: true
         }))
 
-        await router.push(`/users/`)
-        //await router.push(`/user/${response._id}`)
+        //await router.push(`/users/`)
+        await router.push(`/users/${response._id}`)
     }
 
     function onChange (event) {

@@ -16,14 +16,8 @@ export default function MenuList ({}) {
     const peer = useAppSelector((state) => state.peer)
     const dispatch = useAppDispatch()
 
-    const peerRef = useRef(null);
-
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
-
-    const [isConnectedToPeer, setIsConnectedToPeer] = useState(false);
-
-    const [peerStatus, setPeerStatus] = useState('Disconnected');
 
     useEffect(() => {
         (async () => {
@@ -36,11 +30,9 @@ export default function MenuList ({}) {
 
     useEffect(() => {
         (async () => {
-            console.log('Устанавливаю remoteVideoRef')
             if (peer.remoteStream) {
                 remoteVideoRef.current.srcObject = await getRemoteStream()
             }
-            //console.log(remoteVideoRef.current.srcObject)
         })()
     }, [peer.remoteStream])
 
@@ -52,51 +44,64 @@ export default function MenuList ({}) {
     const handleStartCall = async () => {
         Signal(GetOffer())
 
-        /*
-        // Получаем локальный поток, если его еще нет
-        if (!localVideoRef.current?.srcObject) {
-            const stream = await getLocalStream();
-            if (!stream) {
-                // Ошибка уже была показана в getLocalStream
-                return;
-            }
-            // После получения потока, можем продолжить
-        }
-
-        // Если peer уже существует, ничего не делаем
-        if (peerRef.current) {
-            console.log('Peer connection already exists.');
-            return;
-        }
-
-        console.log('Initiating call...');
-        setPeerStatus('Initiating call...');
-        // Создаем peer как инициатор
-        createPeerConnection(socketRef.current, null, toId, true);
-        */
-
-    };
+    }
 
     return (
         <div className={Style.modal} style={peer.isModalOpen ? {display: 'block'} : {display: 'none'}}>
             <div className={Style.template}>
-                Окно вызова
-                <br />
-                <button onClick={OnCloseModal}>Отмена вызова</button>
-                <br />
-                <button>Взять трубку</button>
 
-                <h1>My Video Call Page</h1>
-                {/*isConnectedToSocket ? <p>Соединен (socket id: <b>{socketRef.current.id}</b>)</p> : <p>Нет соединения</p>*/}
-                <br/>
+                <video
+                    ref={remoteVideoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
+                    className={Style.remoteVideo}
+                />
 
-                <br/>
-                <br/>
+                <div className={Style.contentOverlay}>
 
+
+
+                    <div className={Style.content}>
+                        <div className={Style.name}>
+                            <p>User name</p>
+                        </div>
+
+                        <div className={Style.footer}>
+                            <div className={Style.localVideo}>
+                                <video
+                                    ref={localVideoRef}
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    //className={Style.localVideo}
+                                    //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
+                                />
+                            </div>
+                            <div className={Style.button}>
+                                <button onClick={OnCloseModal}>Отмена вызова</button>
+                                {peer.isInitiator === false ? <button onClick={handleStartCall}>Принять вызов</button> : null}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+/*
+                <h1>Звонок</h1>
 
 
                 <hr/>
-                <p>Статус звонка <b>{peerStatus}</b></p>
+
                 <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
                     <div style={{ textAlign: 'center' }}>
                         <h3>Your Video</h3>
@@ -119,8 +124,8 @@ export default function MenuList ({}) {
                         />
                     </div>
                 </div>
-                <button onClick={handleStartCall}>Принять вызов</button>
-            </div>
-        </div>
-    )
-}
+                <br />
+                <button onClick={OnCloseModal}>Отмена вызова</button>
+                <br />
+                {peer.isInitiator === false ? <button onClick={handleStartCall}>Принять вызов</button> : null}
+ */

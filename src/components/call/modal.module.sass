@@ -7,10 +7,78 @@
   width: 100% /* Занимает всю ширину */
   height: 100% /* Занимает всю высоту */
   //background-color: rgba(0, 0, 0, 0.7)
-  background-color: aqua
+  background-color: black
 
-  .template
-    background-color: aquamarine
+  .template1
+    background-color: darkgrey
     max-width: 600px
     margin: 0 auto
     height: 100vh
+
+  .template
+    position: relative /* Важно для позиционирования содержимого поверх видео */
+    max-width: 600px
+    height: 100vh
+    margin: 0 auto
+    //width: 100vw /* 100% ширины видимой области окна */
+    //height: 100vh /* 100% высоты видимой области окна */
+    //display: flex /* Используем flexbox для центрирования содержимого */
+    //justify-content: center /* Центрируем содержимое по горизонтали */
+    //align-items: center /* Центрируем содержимое по вертикали */
+    overflow: hidden /* Убеждаемся, что видеофон не выходит за пределы контейнера */
+
+    .remoteVideo
+      position: absolute /* Позиционируем видео абсолютно внутри main-container */
+      background-color: darkgrey
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      object-fit: cover /* Обрезает видео, чтобы оно полностью покрывало контейнер, сохраняя пропорции */
+      z-index: -1 /* Помещаем видеофон позади содержимого */
+
+    .contentOverlay
+      //position: relative /* Позиционируем контент поверх фона */
+      z-index: 1 /* Убеждаемся, что контент находится над видео */
+      //text-align: center /* Центрируем текст внутри блока содержимого */
+      //color: white /* Цвет текста для лучшей читаемости на видеофоне */
+      //padding: 20px /* Небольшие отступы для контента */
+      //background-color: rgba(0, 0, 0, 0.5) /* Полупрозрачный фон для лучшей читаемости текста */
+      //border-radius: 10px /* Скругленные углы */
+      height: 100%
+
+
+
+      .content
+        height: 100%
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+
+        .name
+          //height: 50px
+          width: 100%
+          background-color: rgba(0, 0, 0, 0.5)
+
+          p
+            padding-left: 10px
+            color: white
+            font-size: 20px
+
+        .footer
+
+
+          .localVideo
+            //position: absolute
+            width: 50px
+            height: 80px
+            background-color: #007bff
+
+            /* Отступы */
+            right: 20px
+            bottom: 20px
+
+            video
+              width: 100%
+              height: 100%
+              object-fit: cover
