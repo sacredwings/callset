@@ -57,7 +57,8 @@ export default function AuthLogin () {
             remember: form.remember
         }))
 
-        router.push(`/users/${response._id}`)
+        //router.push(`/users/${response._id}`)
+        window.location.replace(`/users/${response._id}`)
     }
 
     const onChange = (event) => {

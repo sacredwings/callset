@@ -2,6 +2,7 @@ import ChatsMenu from "@/components/chats/menu"
 import UsersList from "@/components/users/list"
 import {cookies} from "next/headers";
 import {ServerUserGet} from "@/components/functions/urlApi";
+import Form from "@/components/menu/form";
 
 export default async function Page ({
     searchParams
@@ -15,7 +16,7 @@ export default async function Page ({
     const queryCount = 20
     const queryOffset = pageSearchParam ? (Number(pageSearchParam) - 1) * queryCount : 0
 
-    const arUsers = await ServerUserGet({
+    const list = await ServerUserGet({
         q: qSearchParam ?? null,
 
         count: queryCount,
@@ -24,8 +25,8 @@ export default async function Page ({
 
     return (
         <div>
-            <ChatsMenu />
-            <UsersList list={arUsers}/>
+            <Form searchParams={await searchParams} url={queryUrl} count={list.count}/>
+            <UsersList list={list}/>
         </div>
     );
 }

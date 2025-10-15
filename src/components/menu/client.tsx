@@ -49,16 +49,39 @@ export default function MenuClient ({account}) {
     }, [])
 
     return (
-        <>
-        {/*<Socket />*/}
-
-            <div className={Style.menu}>
-                <Link href={`/users/${account._id}`}>{account.login}</Link>
-                <Link href={'/users'}>пользователи</Link>
-                <Link href={'/chats'}>чаты</Link>
-                <Link href={'/calls'}>звонки</Link>
-            </div>
-        </>
+        account ? <div className={Style.footerAuth}>
+            <Link href={`/users/${account._id}`} className="btn btn-dark">
+                <i className="fa-regular fa-circle-user"></i>
+                <br/>
+                {account.login}
+            </Link>
+            <Link href={'/users'} className="btn btn-dark">
+                <i className="fa-solid fa-users"></i>
+                <br/>
+                пользователи
+            </Link>
+            <Link href={'/chats'} className="btn btn-dark">
+                <i className="fa-solid fa-comment"></i>
+                <br/>
+                чаты
+            </Link>
+            <Link href={'/calls'} className="btn btn-dark">
+                <i className="fa-solid fa-phone"></i>
+                <br/>
+                звонки
+            </Link>
+        </div> : <div className={Style.footerNoAuth}>
+            <Link href={`/auth/login`} className="btn btn-dark">
+                <i className="fa-regular fa-circle-user"></i>
+                <br/>
+                вход
+            </Link>
+            <Link href={'/auth/reg'} className="btn btn-dark">
+                <i className="fa-solid fa-users"></i>
+                <br/>
+                регистрация
+            </Link>
+        </div>
 
     )
 }

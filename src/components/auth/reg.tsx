@@ -52,7 +52,8 @@ export default function AuthReg () {
         }))
 
         //await router.push(`/users/`)
-        await router.push(`/users/${response._id}`)
+        //await router.push(`/users/${response._id}`)
+        window.location.replace(`/users/${response._id}`)
     }
 
     function onChange (event) {
@@ -72,30 +73,21 @@ export default function AuthReg () {
         setForm(prev => ({...prev, ...{[name]: value}}))
     }
 
-    return <>
-        <div className="shadow p-3 mb-3 bg-white rounded">
-            <h2 className="">Регистрация</h2>
-
+    return <form onSubmit={onClickReg}>
+        <div className="mb-3">
+            <label htmlFor="login" className="form-label">Придумайте логин</label>
+            <input type="text" className={`form-control ${formErr.login ? `is-invalid`:null}`} id="login" name="login" minLength={5} maxLength={32} value={form.login} onChange={onChange} autoComplete=""/>
+            <div id="validationServer03Feedback" style={formErr.login ? {display: 'block'} : null} className={`invalid-feedback`}>
+                Введите более 5 символов
+            </div>
         </div>
-
-        <div className="shadow p-3 mb-3 bg-white rounded">
-            <form onSubmit={onClickReg}>
-                <div className="mb-3">
-                    <label htmlFor="login" className="form-label">Логин</label>
-                    <input type="text" className={`form-control ${formErr.login ? `is-invalid`:null}`} id="login" name="login" minLength={5} maxLength={32} value={form.login} onChange={onChange} autoComplete=""/>
-                    <div id="validationServer03Feedback" style={formErr.login ? {display: 'block'} : null} className={`invalid-feedback`}>
-                        Введите более 5 символов
-                    </div>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Придумайте пароль</label>
-                    <input type="password" className={`form-control ${formErr.password ? `is-invalid`:null}`} id="password" name="password" minLength={8} maxLength={32} value={form.password} onChange={onChange} autoComplete=""/>
-                    <div id="validationServer03Feedback" style={formErr.password ? {display: 'block'} : null} className={`invalid-feedback`}>
-                        Введите более 8 символов
-                    </div>
-                </div>
-                <button type="submit" className="btn btn-primary">Зарегистрироваться</button>
-            </form>
+        <div className="mb-3">
+            <label htmlFor="password" className="form-label">Придумайте пароль</label>
+            <input type="password" className={`form-control ${formErr.password ? `is-invalid`:null}`} id="password" name="password" minLength={8} maxLength={32} value={form.password} onChange={onChange} autoComplete=""/>
+            <div id="validationServer03Feedback" style={formErr.password ? {display: 'block'} : null} className={`invalid-feedback`}>
+                Введите более 8 символов
+            </div>
         </div>
-    </>
+        <button type="submit" className="btn btn-primary">Зарегистрироваться</button>
+    </form>
 }

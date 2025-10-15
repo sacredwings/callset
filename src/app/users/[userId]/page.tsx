@@ -1,7 +1,7 @@
 import MessagesMenu from "@/components/messages/menu";
 import MessagesList from "@/components/messages/list";
 import UsersId from "@/components/users/id";
-import {ServerUserGetById} from "@/components/functions/urlApi";
+import {ServerAccountGet, ServerUserGetById} from "@/components/functions/urlApi";
 import {cookies} from "next/headers";
 
 export default async function Page ({
@@ -12,15 +12,10 @@ export default async function Page ({
     const {userId: userIdParam} = await params
     const cookieStore = await cookies()
 
+    const account = await ServerAccountGet({cookies: await cookies()})
     const user = await ServerUserGetById({
         ids: [userIdParam]
     }, {cookies: cookieStore})
 
-    console.log(user)
-
-    return (
-        <div>
-            <UsersId user={user[0]}/>
-        </div>
-    );
+    return <UsersId user={user[0]} account={account}/>
 }

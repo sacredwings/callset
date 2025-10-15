@@ -24,7 +24,9 @@
     "recaptcha-v3-react-function-async": "^0.0.5",
     "save": "^2.9.0",
     "simple-peer": "^9.11.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "bootstrap": "^5.3.8",
+    "fontawesome-free-v6": "^1.0.1"
   },
   "devDependencies": {
     "@babel/runtime": "^7.28.4",

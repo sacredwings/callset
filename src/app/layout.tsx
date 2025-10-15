@@ -6,6 +6,8 @@ import AppInit from "@/components/app/init";
 import Menu from "@/components/menu/server";
 import Style from "@/app/style.module.sass";
 import CallModal from "@/components/call/modal";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import "fontawesome-free-v6/css/all.css"
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

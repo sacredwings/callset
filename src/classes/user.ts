@@ -164,6 +164,8 @@ export class CUser {
     //поиск по пользователям
     static async Get(fields) {
         try {
+            if (fields.login) fields.login = fields.login.toLowerCase()
+
             let arAggregate = []
             arAggregate.push({
                 $match:
@@ -192,6 +194,9 @@ export class CUser {
 
             if (fields.q) arAggregate[0].$match.$text = {}
             if (fields.q) arAggregate[0].$match.$text.$search = fields.q
+
+            if (fields.login)
+                arAggregate[0].$match.login = fields.login
 
             //сортировка, если поиска нет
             if (fields.q)

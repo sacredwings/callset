@@ -35,7 +35,7 @@ export async function GET(request: Request) {
             await Authentication(request)
 
             let arFields = {
-                q: value.q,
+                login: value.q,
 
                 offset: value.offset,
                 count: value.count

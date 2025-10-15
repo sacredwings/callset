@@ -5,7 +5,7 @@ import {openModal} from "@/lib/redux/slices/peer";
 import {CallStart} from "@/lib/services/peer";
 import Style from "./id.module.sass";
 
-export default function UserId ({user}) {
+export default function UserId ({user, account}) {
     const myUser = useAppSelector((state) => state.myUser)
     const dispatch = useAppDispatch()
 
@@ -18,18 +18,15 @@ export default function UserId ({user}) {
             audio: true
         })
 
-/*
-        dispatch(openModal({
-            receiverId: id,
-            isInitiator: true
-        }))*/
     }
 
     return (
         <div className={Style.component}>
-            <h1>{user.login}</h1>
-            <br/>
-            <button onClick={OnClick}>Позвонить</button>
+            <div className={Style.block}>
+                <h1>{user.login}</h1>
+                <br/>
+                {account && account._id !== user._id ? <button className="btn btn-dark" onClick={OnClick}>Позвонить</button> : null}
+            </div>
         </div>
     )
 }
