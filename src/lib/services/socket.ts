@@ -4,7 +4,7 @@ import {
     socketConnect,
     socketDisconnect,
 } from '@/lib/redux/slices/socket'
-import {CallStart, GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
+import {CallEnd, CallStart, GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
 import {openModal} from "@/lib/redux/slices/peer";
 import config from "../../../config.json";
 
@@ -23,7 +23,6 @@ const setupSocketEvents = () => {
     const peerState = store.getState().peer
     const peer = getPeer()
 
-
     if (!socketInstance) return; // Если экземпляра нет, ничего не делаем
 
     socketInstance.on('connect', () => {
@@ -35,27 +34,28 @@ const setupSocketEvents = () => {
     socketInstance.on('disconnect', () => {
         console.log(`WebSocket disconnected!`);
         store.dispatch(socketDisconnect());
-        // socketInstance = null; // Можно сбросить здесь, но лучше в disconnectSocket()
+        socketInstance = null; // Можно сбросить здесь, но лучше в disconnectSocket()
+    });
+
+    socketInstance.on('offerСanceled', (userSenderId) => {
+        console.log(`offerСanceled !`);
+
+        //нужно проверить по пользователю
+        CallEnd()
+        //store.dispatch(socketDisconnect());
+        //socketInstance = null; // Можно сбросить здесь, но лучше в disconnectSocket()
     });
 
     // --- WebRTC Signaling Handlers ---
-    socketInstance.on('offer', (offer, userSenderId, sucketSenderId) => {
+    socketInstance.on('offer', async (offer, userSenderId, sucketSenderId) => {
         console.log(`Получаю offer от: ${userSenderId}, ${sucketSenderId} - Входящий звонок`);
 
-
-        CallStart ({
+        await CallStart ({
             receiverId: userSenderId,
             isInitiator: false,
             video: true,
             audio: true
         })
-
-        /*
-        store.dispatch(openModal({
-            receiverId: userSenderId,
-            isInitiator: false
-        }))*/
-
 
         SetOffer(offer)
     });

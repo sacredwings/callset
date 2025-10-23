@@ -121,6 +121,41 @@ export const setStream = async ({video = true, audio = true}) => {
 }
 
 /**
+ * Остановка медиа потока
+ */
+export const stopStream = () => {
+    if (state.localStream)
+        state.localStream.getTracks().forEach(track => track.stop())
+
+    state.localStream = null
+}
+
+export const changeStream = ({video, audio}) => {
+    if (!state.localStream) {
+        console.warn("changeStream: localStream не существует. Ничего не изменено.");
+        return;
+    }
+
+    const tracks = state.localStream.getTracks();
+
+    tracks.forEach(track => {
+        if (track.kind === 'video') {
+            // Применяем новое состояние только если оно передано
+            if (typeof video === 'boolean') {
+                track.enabled = video;
+                console.log(`Видео-трек ${video ? 'включен' : 'выключен'}.`);
+            }
+        } else if (track.kind === 'audio') {
+            // Применяем новое состояние только если оно передано
+            if (typeof audio === 'boolean') {
+                track.enabled = audio;
+                console.log(`Аудио-трек ${audio ? 'включен' : 'выключен'}.`);
+            }
+        }
+    });
+}
+
+/**
  * Получает локальный медиа поток
  */
 export const getLocalStream = async (videoRef) => {
@@ -174,8 +209,10 @@ export const CallStart = async ({isInitiator, receiverId, video, audio}) => {
     }))
 
     //получение потока
+    //обработка ошибки если устройства нет
     await setStream({video, audio}) //настраиваем захват
 
+    //разрыв стрима при закрытии соединения пира
     //создание peer
     initializePeer({
         isInitiator: isInitiator,
@@ -184,14 +221,22 @@ export const CallStart = async ({isInitiator, receiverId, video, audio}) => {
 }
 
 export const CallEnd = () => {
+    const socket = getSocket()
+
     console.log('Закрываю вызов')
 
     //закрываем модальное окно
     store.dispatch(closeModal())
 
+    stopStream()
+
     //обрыв соединения
     if (state.isConnect)
         state.peer.destroy()
+
+    //если я инициатор, то уведомляем звонящего, что вызов отменен
+    if (state.isInitiator && socket)
+        socket.emit('offerСanceled', state.receiverId);
 
     //обнуление
     state.peer = null
