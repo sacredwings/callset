@@ -69,6 +69,17 @@ export default function MenuList ({}) {
                         </div>
 
                         <div className={Style.footer}>
+                            <div className={Style.button}>
+                                {peer.isInitiator === false ? <button className={Style.open} onClick={handleStartCall}>
+                                    <i className="fa-solid fa-phone-volume"></i>
+                                </button> : null}
+
+                                <button className={Style.close} onClick={OnCloseModal}>
+                                    <i className="fa-solid fa-phone-slash"></i>
+                                </button>
+
+                            </div>
+
                             <div className={Style.localVideo}>
                                 <video
                                     ref={localVideoRef}
@@ -79,11 +90,6 @@ export default function MenuList ({}) {
                                     //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
                                 />
                             </div>
-                            <div className={Style.button}>
-                                <button onClick={OnCloseModal}>Отмена вызова</button>
-                                {peer.isInitiator === false ? <button onClick={handleStartCall}>Принять вызов</button> : null}
-                            </div>
-
                         </div>
 
                     </div>
