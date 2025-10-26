@@ -63,6 +63,7 @@ export const socketSlice = createSlice({
         closeModal(state) {
             state.isModalOpen = false
             state.remoteStream = false
+            state.localStream = false
             state.receiverId = null
         },
 
