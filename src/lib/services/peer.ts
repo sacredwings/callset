@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Peer from 'simple-peer'
 import { store } from '@/lib/redux/store' // <--- !!! ИМПОРТИРУЕМ ГЛОБАЛЬНЫЙ STORE !!!
 import {

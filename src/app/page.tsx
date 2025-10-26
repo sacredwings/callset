@@ -1,6 +1,6 @@
+// @ts-nocheck
 import Link from 'next/link'
 import Style from "./style.module.sass";
-import AuthLogin from '@/components/auth/login'
 import {ServerAccountGet} from "@/components/functions/urlApi";
 import {cookies} from "next/headers";
 

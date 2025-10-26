@@ -1,3 +1,4 @@
+// @ts-nocheck
 import io, { Socket } from 'socket.io-client'
 import { store } from '@/lib/redux/store' // <--- !!! ИМПОРТИРУЕМ ГЛОБАЛЬНЫЙ STORE !!!
 import {

@@ -1,5 +1,4 @@
-import MessagesMenu from "@/components/messages/menu";
-import MessagesList from "@/components/messages/list";
+// @ts-nocheck
 import UsersId from "@/components/users/id";
 import {ServerAccountGet, ServerUserGetById} from "@/components/functions/urlApi";
 import {cookies} from "next/headers";

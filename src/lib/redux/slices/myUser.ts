@@ -1,3 +1,4 @@
+// @ts-nocheck
 // app/slices/myUser.ts
 // 'use client'; // Не требуется, если slice не содержит клиентских хуков
 

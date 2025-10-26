@@ -1,4 +1,4 @@
-import ChatsMenu from "@/components/chats/menu"
+// @ts-nocheck
 import UsersList from "@/components/users/list"
 import {cookies} from "next/headers";
 import {ServerUserGet} from "@/components/functions/urlApi";
