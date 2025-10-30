@@ -104,6 +104,15 @@ export const initializePeer  = ({
         initiator: isInitiator,
         stream: state.localStream,
         trickle: false, // Сбор всех ICE кандидатов одновременно
+        config: {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' }, // Обязательно добавьте хотя бы один STUN
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' },
+            ]
+        }
     }
     console.log(options)
     state.peer = new Peer(options);
