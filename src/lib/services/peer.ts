@@ -103,7 +103,7 @@ export const initializePeer  = ({
     const options = {
         initiator: isInitiator,
         stream: state.localStream,
-        trickle: false, // Сбор всех ICE кандидатов одновременно
+        trickle: true, // Сбор всех ICE кандидатов одновременно
         config: {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' }, // Один надежный STUN
