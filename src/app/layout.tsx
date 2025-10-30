@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.sass";
 import StoreProvider from '@/lib/redux/provider';
-import AppInit from "@/components/app/init";
+import ToastList from "@/components/toast/list";
 import Menu from "@/components/menu/server";
 import Style from "@/app/style.module.sass";
 import CallModal from "@/components/call/modal";
@@ -34,6 +34,7 @@ export default function RootLayout({
         <body>
         <StoreProvider>
             <CallModal />
+            <ToastList/>
             <div className={Style.template}>
                 <div className={Style.center}>
                     <div className={Style.content}>

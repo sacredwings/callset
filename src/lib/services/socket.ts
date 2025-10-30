@@ -7,6 +7,7 @@ import {
 } from '@/lib/redux/slices/socket'
 import {CallEnd, CallStart, GetOffer, getPeer, SetOffer, Signal} from '@/lib/services/peer'
 import {openModal} from "@/lib/redux/slices/peer";
+import { addToastSystem } from '@/lib/services/toastSystem'
 import config from "../../../config.json";
 
 // --- Конфигурация ---
@@ -32,10 +33,13 @@ const setupSocketEvents = () => {
         console.log('socketId', socketInstance.id)
     });
 
+    //может возникнуть как при разрыве так и при завершении авторизации
     socketInstance.on('disconnect', () => {
         console.log(`WebSocket disconnected!`);
         store.dispatch(socketDisconnect());
-        socketInstance = null; // Можно сбросить здесь, но лучше в disconnectSocket()
+        socketInstance = null; //Сброс инициализации
+
+        //socketInstance.connect()
     });
 
     socketInstance.on('offerСanceled', (userSenderId) => {
@@ -82,6 +86,11 @@ export const initializeSocket  = ({
         return
     }
 
+    if (!auth || !auth.tid || !auth.tkey) {
+        console.log('Нет auth для подключения WebSocket')
+        return
+    }
+
     const options: { autoConnect: boolean; query: { tid: string; tkey: string } } = {
         autoConnect: false, // Управление подключением вручную
         query: {
@@ -97,6 +106,11 @@ export const initializeSocket  = ({
  * Устанавливает WebSocket соединение.
  */
 export const connectSocket  = () => {
+    if (!socketInstance) {
+        console.log('WebSocket пытается соединиться, но инициализация не пройдена')
+        return
+    }
+
     const socketState = store.getState().socket
 
     if (socketState.isConnected) {
@@ -106,6 +120,8 @@ export const connectSocket  = () => {
 
     console.log('WebSocket не подключен, подключаю')
     socketInstance.connect()
+
+    //addToastSystem({code: 0, msg: 'Socket подключен'})
 }
 /**
  * Отключает WebSocket соединение.
@@ -121,6 +137,8 @@ export const disconnectSocket = () => {
 
     console.log('WebSocket подключен, отключаю')
     socketInstance.disconnect()
+
+    //addToastSystem({code: 1, msg: 'Socket отключен'})
 };
 
 export const getSocket = () => {

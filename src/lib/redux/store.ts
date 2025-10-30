@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import myUserReducer from '@/lib/redux/slices/myUser' // Импортируем наш единственный редьюсер
 import socketReducer from '@/lib/redux/slices/socket'
 import peerReducer from '@/lib/redux/slices/peer'
+import toastSystemReducer from '@/lib/redux/slices/toastSystem'
 
 // ---- configureStore ----
 export const store = configureStore({
@@ -13,7 +14,8 @@ export const store = configureStore({
     reducer: {
         myUser: myUserReducer,
         socket: socketReducer,
-        peer: peerReducer
+        peer: peerReducer,
+        toastSystem: toastSystemReducer
     },
     // Middleware (например, thunk) добавляются configureStore по умолчанию.
     // devTools: process.env.NODE_ENV !== 'production', // Оставьте, если нужен DevTools

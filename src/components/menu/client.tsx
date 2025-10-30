@@ -30,6 +30,10 @@ export default function MenuClient ({account}) {
                     console.error('Error when load ReCaptcha', e)
                 })
 
+            //если аккаунта нет, не делаем полключений
+            if (!account)
+                return
+
             dispatch(AuthUpdate({
                 auth: true,
                 _id: account._id,
@@ -44,6 +48,7 @@ export default function MenuClient ({account}) {
                     }
                 }
             )
+
             connectSocket()
         })()
     }, [])
