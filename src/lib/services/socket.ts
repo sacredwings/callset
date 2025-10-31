@@ -69,6 +69,11 @@ const setupSocketEvents = () => {
         console.log('Получен answer');
         Signal(answer)
     });
+
+    socketInstance.on('candidate', (candidate) => {
+        console.log('Получен candidate');
+        Signal(candidate)
+    });
 };
 
 /**

@@ -62,9 +62,43 @@ const setupPeerEvents = () => {
         CallEnd() //обнуляем все
     });
 
-    state.peer.on('signal', (data) => {
+    state.peer.on('signal', (data, socketUser, socketId) => {
         console.log('Получен signal:', data.type)
 
+        /*
+        if (data.type === 'offer') {
+            // Если это Offer (только от инициатора)
+            console.log(`Sending offer to ${state.receiverId}`);
+            socket.emit('offer', data, state.receiverId); // Отправляем как offer
+        } else if (data.type === 'answer') {
+            // Если это Answer (только от получателя)
+            console.log(`Sending answer to ${state.receiverId}`);
+            socket.emit('answer', data, state.receiverId); // Отправляем как answer
+        }
+        */
+
+
+        // Проверяем тип сигнала
+        if (data.type === 'offer') {
+            // Если это Offer (только от инициатора)
+            console.log(`Sending offer to ${state.receiverId}`);
+            socket.emit('offer', data, state.receiverId); // Отправляем как offer
+        } else if (data.type === 'answer') {
+            // Если это Answer (только от получателя)
+            console.log(`Sending answer to ${state.receiverId}`);
+            socket.emit('answer', data, state.receiverId); // Отправляем как answer
+        } else if (data.type === 'candidate') {
+            // Если это ICE Candidate
+            console.log(`Sending candidate to ${state.receiverId}`);
+            socket.emit('candidate', data, state.receiverId); // Отправляем как candidate
+        } else {
+            // Другие типы сигналов (например, rollback, session-description)
+            // В простых случаях можно их игнорировать или отправлять как generic signal
+            console.warn('Unhandled signal type:', data.type);
+            // Можно использовать общий обработчик:
+            // socket.emit('signal', data, state.receiverId);
+        }
+        /*
         if (state.isInitiator) {
             // Если мы инициатор, отправляем offer
             console.log(`отправляю offer - ${state.receiverId}`)
@@ -73,13 +107,13 @@ const setupPeerEvents = () => {
             // Если мы не инициатор, отправляем answer
             console.log(`отправляю answer - ${state.receiverId}`)
             socket.emit('answer', data, state.receiverId);
-        }
+        }*/
     });
     state.peer.on('stream', (remoteStream) => {
         console.log('Получен удаленный stream')
 
         state.remoteStream = remoteStream //сохраняем удаленный stream
-        store.dispatch(setRemoteStream()) //уведомление, что stream подключен
+        store.dispatch(setRemoteStream()) //уведомление, что stream получен
     });
 };
 
@@ -106,7 +140,8 @@ export const initializePeer  = ({
         trickle: true, // Сбор всех ICE кандидатов одновременно
         config: {
             iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' }, // Один надежный STUN
+                { urls: 'stun:stun.stunprotocol.org:3478' },
+                { urls: 'stun:stunserver.org:3478' } // Убедитесь, что этот сервер доступен
             ]
         }
     }
