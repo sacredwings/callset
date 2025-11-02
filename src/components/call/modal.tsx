@@ -3,13 +3,12 @@
 import {useAppDispatch, useAppSelector} from "@/lib/redux/hooks";
 import Style from "./modal.module.sass";
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {loadReCaptcha} from "recaptcha-v3-react-function-async"
-import config from "../../../config.json";
-import {ServerAccountGet} from "@/components/functions/urlApi";
-import {openModal, closeModal} from "@/lib/redux/slices/peer";
-import {CallEnd, getLocalStream, GetOffer, getRemoteStream, setLocalStream, Signal, state} from "@/lib/services/peer";
-import Call from "@/components/call/call";
-
+import {
+    CallDisconnected,
+    GetLocalStream,
+    GetRemoteStream,
+    CallConnected,
+} from "@/lib/services/peer";
 
 export default function MenuList ({}) {
     const myUser = useAppSelector((state) => state.myUser)
@@ -22,7 +21,7 @@ export default function MenuList ({}) {
     useEffect(() => {
         (async () => {
             if (peer.localStream) {
-                localVideoRef.current.srcObject = await getLocalStream()
+                localVideoRef.current.srcObject = await GetLocalStream()
             }
         })()
     }, [peer.localStream])
@@ -31,19 +30,19 @@ export default function MenuList ({}) {
     useEffect(() => {
         (async () => {
             if (peer.remoteStream) {
-                remoteVideoRef.current.srcObject = await getRemoteStream()
+                remoteVideoRef.current.srcObject = await GetRemoteStream()
             }
         })()
     }, [peer.remoteStream])
 
+    // --- Handler для кнопки "Close Call" ---
     const  OnCloseModal = () => {
-        CallEnd()
+        CallDisconnected()
     }
 
     // --- Handler для кнопки "Start Call" ---
     const handleStartCall = async () => {
-        Signal(GetOffer())
-
+        await CallConnected()
     }
 
     return (
@@ -54,15 +53,10 @@ export default function MenuList ({}) {
                     ref={remoteVideoRef}
                     autoPlay
                     playsInline
-                    //muted
-                    //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
                     className={Style.remoteVideo}
                 />
 
                 <div className={Style.contentOverlay}>
-
-
-
                     <div className={Style.content}>
                         <div className={Style.name}>
                             <p>User name</p>
@@ -77,7 +71,6 @@ export default function MenuList ({}) {
                                 <button className={Style.close} onClick={OnCloseModal}>
                                     <i className="fa-solid fa-phone-slash"></i>
                                 </button>
-
                             </div>
 
                             <div className={Style.localVideo}>
@@ -85,18 +78,11 @@ export default function MenuList ({}) {
                                     ref={localVideoRef}
                                     autoPlay
                                     playsInline
-                                    //muted
-                                    //className={Style.localVideo}
-                                    //style={{ width: '250px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f0f0f0' }}
                                 />
                             </div>
                         </div>
-
                     </div>
-
-
                 </div>
-
             </div>
         </div>
     )
