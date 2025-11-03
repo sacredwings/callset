@@ -9,6 +9,7 @@ import {
     setRemoteStream
 } from '@/lib/redux/slices/peer'
 import { getSocket } from '@/lib/services/socket'
+import {addToastSystem} from "@/lib/services/toastSystem";
 
 // --- Конфигурация ---
 
@@ -128,9 +129,22 @@ export const initializePeer  = async () => {
  * Создание медиа потока
  */
 export const SetStream = async ({video = true, audio = true}) => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-    state.localStream = stream
-    store.dispatch(setLocalStream())
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
+        state.localStream = stream
+        store.dispatch(setLocalStream())
+    } catch (error) {
+        console.error("Ошибка getUserMedia:", error);
+        if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+            alert("Устройство не найдено. Возможно, оно занято или не поддерживается.");
+            addToastSystem({code: 1, msg: 'Устройство не найдено. Возможно, оно занято или не поддерживается.'})
+        } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            alert("Доступ запрещен. Проверьте разрешения в настройках телефона.");
+            addToastSystem({code: 1, msg: 'Доступ запрещен. Проверьте разрешения в настройках телефона.'})
+        } else {
+            alert("Произошла ошибка: " + error.message);
+        }
+    }
 }
 
 /**
