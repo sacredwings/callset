@@ -63,7 +63,7 @@ const setupSocketEvents = () => {
 
         await SetStream({video: true, audio: true}) // Захват медиа потока
 
-        initializePeer() // Инициализируем Peer
+        await initializePeer() // Инициализируем Peer
     })
 
     // Уведомление о завершении звонка

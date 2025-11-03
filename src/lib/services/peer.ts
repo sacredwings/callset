@@ -96,7 +96,7 @@ const setupPeerEvents = () => {
 /**
  * Инициализирует Peer соединение.
  */
-export const initializePeer  = () => {
+export const initializePeer  = async () => {
     const peertState = store.getState().peer
 
     console.log('initializePeer')
@@ -118,7 +118,7 @@ export const initializePeer  = () => {
         }
     }
 
-    state.peer = new Peer(options);
+    state.peer = await new Peer(options);
     setupPeerEvents()
 
     console.log('Peer создан')
@@ -230,11 +230,12 @@ export const CallConnected = async () => {
     console.log('CallConnected')
 
     console.log('Отправляю ответ на звонок')
-    socket.emit('callConnected', peertState.receiverId); // Отправляю подтверждение принятия на звонока
 
     await SetStream({video: true, audio: true}) //настраиваем захват
 
-    initializePeer() // Инициализируем Peer
+    await initializePeer() // Инициализируем Peer
+
+    socket.emit('callConnected', peertState.receiverId); // Отправляю подтверждение принятия на звонка
 }
 
 export const CallDisconnected = () => {
