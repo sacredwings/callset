@@ -18,6 +18,31 @@ export default function MenuList ({}) {
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
 
+    const audioInRef = useRef(null);
+    const audioOutRef = useRef(null);
+
+    useEffect(() => {
+        (async () => {
+            if (!audioInRef.current || !audioOutRef.current)
+                return
+
+            if (peer.isConnecting) {
+                if (peer.isInitiator === true) {
+                    audioOutRef.current.play()
+                } else if (peer.isInitiator === false) {
+                    audioInRef.current.play()
+                }
+            } else {
+                audioInRef.current.pause()
+                audioInRef.current.currentTime = 0
+
+                audioOutRef.current.pause()
+                audioOutRef.current.currentTime = 0
+            }
+
+        })()
+    }, [peer.isConnecting])
+
     useEffect(() => {
         (async () => {
             if (peer.localStream) {
@@ -25,7 +50,6 @@ export default function MenuList ({}) {
             }
         })()
     }, [peer.localStream])
-
 
     useEffect(() => {
         (async () => {
@@ -38,6 +62,12 @@ export default function MenuList ({}) {
     // --- Handler для кнопки "Close Call" ---
     const  OnCloseModal = () => {
         CallDisconnected()
+
+        //audioInRef.current.pause()
+        //audioInRef.current.currentTime = 0
+
+        //audioOutRef.current.pause()
+        //audioOutRef.current.currentTime = 0
     }
 
     // --- Handler для кнопки "Start Call" ---
@@ -48,6 +78,17 @@ export default function MenuList ({}) {
     return (
         <div className={Style.modal} style={peer.isModalOpen ? {display: 'block'} : {display: 'none'}}>
             <div className={Style.template}>
+
+                <>
+                    <audio ref={audioInRef} loop={true}>
+                        <source src="/public/call/in.mp3" type="audio/mpeg" />
+                        Ваш браузер не поддерживает аудио элемент.
+                    </audio>
+                    <audio ref={audioOutRef} loop={true}>
+                        <source src="/public/call/out.mp3" type="audio/mpeg" />
+                        Ваш браузер не поддерживает аудио элемент.
+                    </audio>
+                </>
 
                 <video
                     ref={remoteVideoRef}

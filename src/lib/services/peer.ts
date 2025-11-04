@@ -138,10 +138,10 @@ export const SetStream = async ({video = true, audio = true}) => {
         console.error("Ошибка getUserMedia:", error);
         if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
             alert("Устройство не найдено. Возможно, оно занято или не поддерживается.");
-            addToastSystem({code: 1, msg: 'Устройство не найдено. Возможно, оно занято или не поддерживается.'})
+            //addToastSystem({code: 1, msg: 'Устройство не найдено. Возможно, оно занято или не поддерживается.'})
         } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
             alert("Доступ запрещен. Проверьте разрешения в настройках телефона.");
-            addToastSystem({code: 1, msg: 'Доступ запрещен. Проверьте разрешения в настройках телефона.'})
+            //addToastSystem({code: 1, msg: 'Доступ запрещен. Проверьте разрешения в настройках телефона.'})
         } else {
             alert("Произошла ошибка: " + error.message);
         }
@@ -269,6 +269,9 @@ export const CallDisconnected = () => {
 
     // Закрываем модальное окно
     store.dispatch(closeModal())
+
+    //остановка медиа потока
+    StopStream()
 
     // Обнуление
     state.peer = null
