@@ -8,11 +8,20 @@ export default function UserId ({user, account}) {
     const myUser = useAppSelector((state) => state.myUser)
     const dispatch = useAppDispatch()
 
-    const OnClick = async () => {
+    const OnClickAudio = async () => {
 
         await CallConnecting ({
             receiverId: user._id,
-            isInitiator: true,
+            video: false,
+            audio: true
+        })
+
+    }
+
+    const OnClickVideo = async () => {
+
+        await CallConnecting ({
+            receiverId: user._id,
             video: true,
             audio: true
         })
@@ -24,7 +33,13 @@ export default function UserId ({user, account}) {
             <div className={Style.block}>
                 <h1>{user.login}</h1>
                 <br/>
-                {account && account._id !== user._id ? <button className="btn btn-dark" onClick={OnClick}>Позвонить</button> : null}
+                {account && account._id !== user._id ?
+                    <button className="btn btn-dark" onClick={OnClickAudio}>
+                        <i className="fa-solid fa-phone"></i>
+                    </button> : null}
+                {account && account._id !== user._id ? <button className="btn btn-dark" onClick={OnClickVideo}>
+                    <i className="fa-solid fa-video"></i>
+                </button> : null}
             </div>
         </div>
     )

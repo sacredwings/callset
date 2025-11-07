@@ -9,7 +9,7 @@ import {
     CallDisconnected,
     initializePeer,
     SetStream,
-    Signal
+    Signal, state
 } from '@/lib/services/peer'
 import {openModal} from "@/lib/redux/slices/peer"
 import config from "../../../config.json"
@@ -46,9 +46,14 @@ const setupSocketEvents = () => {
     })
 
     // Входящий звонок
-    socketInstance.on('callConnecting', async (userSenderId, sucketSenderId) => {
+    socketInstance.on('callConnecting', async (userSenderId, sucketSenderId, media) => {
         console.log('Принимаю запрос на звонок')
         console.log('Открываю модальное окно')
+
+        //запрос, какими медиа хотим обменяться
+        //сохраняем на время соединения
+        state.video = media.video
+        state.audio = media.audio
 
         // Открываем модальное окно
         store.dispatch(openModal({
@@ -61,7 +66,7 @@ const setupSocketEvents = () => {
     socketInstance.on('callConnected', async (userSenderId, sucketSenderId) => {
         console.log('Получил подтверждение на принятие звонка')
 
-        await SetStream({video: true, audio: true}) // Захват медиа потока
+        await SetStream({video: state.video, audio: state.audio}) // Захват медиа потока
 
         await initializePeer() // Инициализируем Peer
     })
