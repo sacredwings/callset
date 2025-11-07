@@ -9,6 +9,7 @@ import {
     GetRemoteStream,
     CallConnected,
 } from "@/lib/services/peer";
+import {ServerUserGetById} from "@/components/functions/urlApi";
 
 export default function MenuList ({}) {
     const myUser = useAppSelector((state) => state.myUser)
@@ -20,6 +21,8 @@ export default function MenuList ({}) {
 
     const audioInRef = useRef(null);
     const audioOutRef = useRef(null);
+
+    let [receiverUser, setReceiverUser] = useState(null)
 
     useEffect(() => {
         (async () => {
@@ -58,6 +61,20 @@ export default function MenuList ({}) {
             }
         })()
     }, [peer.remoteStream])
+
+    useEffect(() => {
+        (async () => {
+            if (!peer.receiverId) return
+
+            const user = await ServerUserGetById({
+                ids: [peer.receiverId]
+            }, {})
+
+            if (!user.length) return
+
+            setReceiverUser(user[0])
+        })()
+    }, [peer.receiverId])
 
     // --- Handler для кнопки "Close Call" ---
     const  OnCloseModal = () => {
@@ -100,12 +117,14 @@ export default function MenuList ({}) {
                 <div className={Style.contentOverlay}>
                     <div className={Style.content}>
                         <div className={Style.name}>
-                            <p>User name</p>
+                            <p>{receiverUser && receiverUser.login}</p>
+                            <p>{peer.video ? 'Видео звонок' : 'Аудио звонок'}</p>
                         </div>
 
                         <div className={Style.footer}>
                             <div className={Style.button}>
-                                {peer.isInitiator === false ? <button className={Style.open} onClick={handleStartCall}>
+                                {/* входящий и еще не взял трубку */}
+                                {peer.isInitiator === false && !peer.isConnected ? <button className={Style.open} onClick={handleStartCall}>
                                     <i className="fa-solid fa-phone-volume"></i>
                                 </button> : null}
 

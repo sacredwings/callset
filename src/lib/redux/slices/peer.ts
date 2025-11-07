@@ -12,6 +12,9 @@ interface SocketState {
 
     isInitiator: boolean | null
     receiverId: string | null
+
+    video: boolean | null
+    audio: boolean | null
 }
 
 // Начальное состояние
@@ -26,6 +29,9 @@ const initialState: SocketState = {
 
     isInitiator: null,
     receiverId: null,
+
+    video: null,
+    audio: null,
 };
 
 export const socketSlice = createSlice({
@@ -33,13 +39,22 @@ export const socketSlice = createSlice({
     initialState,
     reducers: {
 
-        openModal(state, action: PayloadAction<{receiverId: string, isInitiator: boolean}>) {
+        openModal(state, action: PayloadAction<{
+            receiverId: string,
+            isInitiator: boolean,
+
+            video: boolean,
+            audio: boolean
+        }>) {
             state.isModalOpen = true
 
             state.isConnecting = true
 
             state.isInitiator = action.payload.isInitiator
             state.receiverId = action.payload.receiverId
+
+            state.video = action.payload.video
+            state.audio = action.payload.audio
         },
 
         closeModal(state) {
@@ -53,6 +68,9 @@ export const socketSlice = createSlice({
 
             state.isInitiator = null
             state.receiverId = null
+
+            state.video = null
+            state.audio = null
         },
 
         connected(state) {

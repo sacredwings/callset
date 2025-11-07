@@ -19,9 +19,6 @@ interface interfaceState {
 
     localStream: MediaStream | null // Локальный медиа поток
     remoteStream: MediaStream | null // Удаленный медиа поток
-
-    video: boolean | null
-    audio: boolean | null
 }
 
 // Начальное состояние
@@ -30,9 +27,6 @@ export const state: interfaceState = {
 
     localStream: null,
     remoteStream: null,
-
-    video: null,
-    audio: null,
 }
 
 // --- Функции для управления Peer ---
@@ -232,10 +226,6 @@ export const CallConnecting = async ({receiverId, video, audio}) => {
     console.log('CallConnecting')
 
     //запрос, какими медиа хотим обменяться
-    //сохраняем на время соединения
-    state.video = video
-    state.audio = audio
-
     let media = {
         video: video,
         audio: audio
@@ -248,6 +238,9 @@ export const CallConnecting = async ({receiverId, video, audio}) => {
     store.dispatch(openModal({
         receiverId: receiverId, // Кому звоним
         isInitiator: true, // Запрос на звонок отправляет только инициатор
+
+        video: video,
+        audio: audio
     }))
 }
 
@@ -262,7 +255,7 @@ export const CallConnected = async () => {
 
     console.log('Отправляю ответ на звонок')
 
-    await SetStream({video: state.video, audio: state.audio}) //настраиваем захват
+    await SetStream({video: peertState.video, audio: peertState.audio}) //настраиваем захват
 
     await initializePeer() // Инициализируем Peer
 

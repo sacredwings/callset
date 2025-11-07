@@ -50,23 +50,23 @@ const setupSocketEvents = () => {
         console.log('Принимаю запрос на звонок')
         console.log('Открываю модальное окно')
 
-        //запрос, какими медиа хотим обменяться
-        //сохраняем на время соединения
-        state.video = media.video
-        state.audio = media.audio
-
+        // Запрос, какими медиа хотим обменяться
         // Открываем модальное окно
         store.dispatch(openModal({
             receiverId: userSenderId, // Кто звонит
             isInitiator: false, // Не может быть инициатором, так как принимает запрос на звонок
+
+            video: media.video,
+            audio: media.audio
         }))
     })
 
     // Подтверждение на принятие звонка
     socketInstance.on('callConnected', async (userSenderId, sucketSenderId) => {
+        const peertState = store.getState().peer
         console.log('Получил подтверждение на принятие звонка')
 
-        await SetStream({video: state.video, audio: state.audio}) // Захват медиа потока
+        await SetStream({video: peertState.video, audio: peertState.audio}) // Захват медиа потока
 
         await initializePeer() // Инициализируем Peer
     })
