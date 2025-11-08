@@ -4,6 +4,11 @@ import {cookies} from "next/headers";
 import {ServerUserGet} from "@/components/functions/urlApi";
 import Form from "@/components/menu/form";
 
+export const metadata: Metadata = {
+    title: 'Пользователи',
+    description: '',
+}
+
 export default async function Page ({
     searchParams
 }: {

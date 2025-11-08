@@ -3,6 +3,11 @@ import UsersId from "@/components/users/id";
 import {ServerAccountGet, ServerUserGetById} from "@/components/functions/urlApi";
 import {cookies} from "next/headers";
 
+export const metadata: Metadata = {
+    title: 'Пользователь',
+    description: '',
+}
+
 export default async function Page ({
     params
 }: {

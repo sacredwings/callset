@@ -4,13 +4,19 @@ import Style from "./style.module.sass";
 import {ServerAccountGet} from "@/components/functions/urlApi";
 import {cookies} from "next/headers";
 
+export const metadata: Metadata = {
+    title: 'Средство связи (коммуникатор) nkvd.su',
+    description: 'Сайт, форум, видео, статьи, фото, документы, чаты, приложение для Военных',
+}
+
 export default async function Home() {
     const account = await ServerAccountGet({cookies: await cookies()})
 
     return (
         <div className={Style.page}>
             <div className={Style.block}>
-                <h1>Мессенджер</h1>
+                <h1>Средство связи (коммуникатор)</h1>
+                <p><span className="badge text-bg-dark">nkvd.su</span></p>
 
                 <div className={Style.button}>
                     {account ? <>
