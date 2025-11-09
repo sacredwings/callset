@@ -15,7 +15,12 @@ export default async function Home() {
     return (
         <div className={Style.page}>
             <div className={Style.block}>
+                <img src={'/nkvd.su.png'} style={{height: '200px'}}/>
+
                 <h1>Средство связи (коммуникатор)</h1>
+                <a href="https://voenset.ru/file/app/nkvd.su.apk" className="btn btn-success btn-sm" download>
+                    Скачать .apk (андроид версия)
+                </a>
                 <p><span className="badge text-bg-dark">nkvd.su</span></p>
 
                 <div className={Style.button}>
