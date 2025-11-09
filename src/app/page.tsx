@@ -23,6 +23,8 @@ export default async function Home() {
                 </a>
                 <p><span className="badge text-bg-dark">nkvd.su</span></p>
 
+                <Link href={'/lesson'}>Как пользоваться средством связи</Link>
+
                 <div className={Style.button}>
                     {account ? <>
                         <Link href={`/users/${account._id}`} className="btn btn-dark">
