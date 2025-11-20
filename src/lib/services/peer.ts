@@ -113,8 +113,7 @@ export const initializePeer  = async () => {
         trickle: true, // Сбор всех ICE кандидатов одновременно
         config: {
             iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun.mozilla.org:19302' },
+                { urls: 'stun:nkvd.su:3478' },
                 { urls: 'stun:global.stun.twilio.com:3478' }
             ]
         }
