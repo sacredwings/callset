@@ -23,6 +23,7 @@ export default function MenuList ({}) {
     const audioOutRef = useRef(null);
 
     let [receiverUser, setReceiverUser] = useState(null)
+    let [answerCall, setAnswerCall] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -78,6 +79,7 @@ export default function MenuList ({}) {
 
     // --- Handler для кнопки "Close Call" ---
     const  OnCloseModal = () => {
+        setAnswerCall(false)
         CallDisconnected()
 
         //audioInRef.current.pause()
@@ -89,6 +91,7 @@ export default function MenuList ({}) {
 
     // --- Handler для кнопки "Start Call" ---
     const handleStartCall = async () => {
+        setAnswerCall(true)
         await CallConnected()
     }
 
@@ -124,7 +127,7 @@ export default function MenuList ({}) {
                         <div className={Style.footer}>
                             <div className={Style.button}>
                                 {/* входящий и еще не взял трубку */}
-                                {peer.isInitiator === false && !peer.isConnected ? <button className={Style.open} onClick={handleStartCall}>
+                                {peer.isInitiator === false && !answerCall ? <button className={Style.open} onClick={handleStartCall}>
                                     <i className="fa-solid fa-phone-volume"></i>
                                 </button> : null}
 
