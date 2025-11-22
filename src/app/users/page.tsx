@@ -3,6 +3,7 @@ import UsersList from "@/components/users/list"
 import {cookies} from "next/headers";
 import {ServerUserGet} from "@/components/functions/urlApi";
 import Form from "@/components/menu/form";
+import Style from "./style.module.sass"
 
 export const metadata: Metadata = {
     title: 'Пользователи',
@@ -29,9 +30,12 @@ export default async function Page ({
     }, {cookies: cookieStore})
 
     return (
-        <div>
-            <Form searchParams={await searchParams} url={queryUrl} count={list.count}/>
-            <UsersList list={list}/>
+        <div className={Style.page}>
+            <div className={Style.content}>
+                <h1>Пользователи</h1>
+                <Form searchParams={await searchParams} url={queryUrl} count={list.count}/>
+                <UsersList list={list}/>
+            </div>
         </div>
     );
 }
