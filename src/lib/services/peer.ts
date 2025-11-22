@@ -268,7 +268,7 @@ export const CallDisconnected = () => {
     console.log('Закрываю вызов')
 
     //обрыв соединения
-    if (peertState.isConnected)
+    if (state.peer)
         state.peer.destroy()
 
     //если я инициатор, то уведомляем звонящего, что вызов отменен
