@@ -44,6 +44,9 @@ export default async function Home() {
                     </>}
 
                 </div>
+
+                <br/>
+                <Link href={'/users/68fc4182c77269908a85a944'}>Военный Юрист</Link>
             </div>
         </div>
     );
